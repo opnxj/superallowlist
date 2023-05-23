@@ -1,4 +1,4 @@
-# ERC-20 with Superwhitelist Functionality
+# Superwhitelist
 
 ## Overview
 
