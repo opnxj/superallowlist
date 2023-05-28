@@ -58,6 +58,7 @@ abstract contract SuperwhitelistERC20 is ERC20, Ownable {
         uint8 decimals
     ) ERC20(name, symbol, decimals) {
         blacklister = msg.sender;
+        emit BlacklisterSet(msg.sender);
     }
 
     /**
