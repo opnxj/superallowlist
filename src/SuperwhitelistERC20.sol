@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {ERC20} from "../lib/solmate/src/tokens/ERC20.sol";
-import {Ownable} from "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import {OFT} from "../lib/solidity-examples/contracts/token/oft/OFT.sol";
+import {ERC20, IERC20} from "../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 
 /**
  * @title SuperwhitelistERC20
  * @author opnxj
- * @dev The SuperwhitelistERC20 contract is an abstract contract that extends the ERC20 token functionality.
+ * @dev The SuperwhitelistERC20 contract is an abstract contract that extends LayerZero's OFT contract, a natively cross-chain token.
  * It adds the ability to manage a blacklist and a superwhitelist, allowing certain addresses to be excluded from the blacklist.
  * The owner can assign a blacklister, who is responsible for managing the blacklist and adding addresses to it.
  * Addresses on the superwhitelist are immune from being blacklisted and have additional privileges.
  */
-abstract contract SuperwhitelistERC20 is ERC20, Ownable {
+abstract contract SuperwhitelistERC20 is OFT {
     address public blacklister;
     mapping(address => bool) public blacklist;
     mapping(address => bool) public superwhitelist;
@@ -50,13 +50,13 @@ abstract contract SuperwhitelistERC20 is ERC20, Ownable {
             provided parameters. The deployer of the contract becomes the blacklister.
      * @param name The name of the token.
      * @param symbol The symbol of the token.
-     * @param decimals The number of decimals used for token representation.
+     * @param lzEndpoint LayerZero endpoint of the network.
      */
     constructor(
         string memory name,
         string memory symbol,
-        uint8 decimals
-    ) ERC20(name, symbol, decimals) {
+        address lzEndpoint
+    ) OFT(name, symbol, lzEndpoint) {
         blacklister = msg.sender;
         emit BlacklisterSet(msg.sender);
     }
@@ -144,7 +144,7 @@ abstract contract SuperwhitelistERC20 is ERC20, Ownable {
         uint256 value
     )
         public
-        override
+        override(ERC20, IERC20)
         notBlacklisted(msg.sender)
         notBlacklisted(to)
         returns (bool)
@@ -168,7 +168,7 @@ abstract contract SuperwhitelistERC20 is ERC20, Ownable {
         uint256 value
     )
         public
-        override
+        override(ERC20, IERC20)
         notBlacklisted(msg.sender)
         notBlacklisted(from)
         notBlacklisted(to)

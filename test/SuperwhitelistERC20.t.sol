@@ -6,7 +6,7 @@ import {SuperwhitelistERC20} from "../src/SuperwhitelistERC20.sol";
 
 // Test contract that inherits from SuperwhitelistERC20
 contract MockSuperwhitelistERC20 is SuperwhitelistERC20 {
-    constructor() SuperwhitelistERC20("Superwhitelist", "SWL", 18) {}
+    constructor() SuperwhitelistERC20("Superwhitelist", "SWL", address(0)) {}
 
     function mint(address to, uint256 amount) public {
         _mint(to, amount);
