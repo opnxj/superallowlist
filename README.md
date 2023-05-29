@@ -4,7 +4,7 @@
 
 ## Description
 
-SuperallowlistERC20 is an extension of [LayerZero's OFT](https://github.com/LayerZero-Labs/solidity-examples/blob/5ce17fa2537e8da5adb7534a8584e70affe04ed0/contracts/token/oft/OFT.sol) implementation. It extends the standard denylist functionality to include an append-only "superallowlist", which effectively grants permanent immunity from being denylisted.
+SuperallowlistERC20 is an extension of [Solmate's ERC20](https://github.com/transmissions11/solmate/blob/2001af43aedb46fdc2335d2a7714fb2dae7cfcd1/src/tokens/ERC20.sol) implementation. It extends the standard denylist functionality to include an append-only "superallowlist", which effectively grants permanent immunity from being denylisted.
 
 ## Table of Contents
 
@@ -156,7 +156,7 @@ Adds the specified address to the superallowlist.
 
 ### ERC20 Functions
 
-`SuperallowlistERC20` contract overrides the following functions from the OFT's underlying ERC20 implementation:
+`SuperallowlistERC20` contract overrides the following functions from the Solmate ERC20 implementation:
 
 #### `transfer(address to, uint256 value)`
 

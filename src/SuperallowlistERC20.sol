@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {OFT} from "../lib/solidity-examples/contracts/token/oft/OFT.sol";
-import {ERC20, IERC20} from "../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import {ERC20} from "../lib/solmate/src/tokens/ERC20.sol";
+import {Ownable} from "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 
 /**
  * @title SuperallowlistERC20
  * @author opnxj
- * @dev The SuperallowlistERC20 contract is an abstract contract that extends LayerZero's OFT contract, a natively cross-chain token.
+ * @dev The SuperallowlistERC20 contract is an abstract contract that extends the ERC20 token functionality.
  * It adds the ability to manage a denylist and a superallowlist, allowing certain addresses to be excluded from the denylist.
  * The owner can assign a denylister, who is responsible for managing the denylist and adding addresses to it.
  * Addresses on the superallowlist are immune from being denylisted and have additional privileges.
  */
-abstract contract SuperallowlistERC20 is OFT {
+abstract contract SuperallowlistERC20 is ERC20, Ownable {
     address public denylister;
     mapping(address => bool) public denylist;
     mapping(address => bool) public superallowlist;
@@ -50,13 +50,13 @@ abstract contract SuperallowlistERC20 is OFT {
             provided parameters. The deployer of the contract becomes the denylister.
      * @param name The name of the token.
      * @param symbol The symbol of the token.
-     * @param lzEndpoint LayerZero endpoint of the network.
+     * @param decimals The number of decimals used for token representation.
      */
     constructor(
         string memory name,
         string memory symbol,
-        address lzEndpoint
-    ) OFT(name, symbol, lzEndpoint) {
+        uint8 decimals
+    ) ERC20(name, symbol, decimals) {
         denylister = msg.sender;
         emit DenylisterSet(msg.sender);
     }
@@ -144,7 +144,7 @@ abstract contract SuperallowlistERC20 is OFT {
         uint256 value
     )
         public
-        override(ERC20, IERC20)
+        override
         notDenylisted(msg.sender)
         notDenylisted(to)
         returns (bool)
@@ -168,7 +168,7 @@ abstract contract SuperallowlistERC20 is OFT {
         uint256 value
     )
         public
-        override(ERC20, IERC20)
+        override
         notDenylisted(msg.sender)
         notDenylisted(from)
         notDenylisted(to)
